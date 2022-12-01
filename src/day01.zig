@@ -11,7 +11,32 @@ const gpa = util.gpa;
 const data = @embedFile("data/day01.txt");
 
 pub fn main() !void {
-    
+    var it = split(u8, data, "\n");
+    var current_count : u32 = 0;
+
+    const top_count = 3;
+    var top : [top_count]u32 = [_]u32{0} ** top_count;
+
+    while (it.next()) |str| {
+        if (str.len == 0) {
+            for (top) |*curr_top| {
+                if (curr_top.* < current_count) {
+                    var swap = current_count;
+                    current_count = curr_top.*;
+                    curr_top.* = swap;
+                }
+            }
+            current_count = 0;
+        }
+        else {
+            current_count += try parseInt(u32, str, 10);
+        }
+    }
+
+    print("The max calorie is : {d}\n", .{top[0]});
+    var sum41 : u32 = 0;
+    for (top) |val| sum41 += val;
+    print("The count of the top {d} calories is {d}\n", .{top_count, sum41});
 }
 
 // Useful stdlib functions
