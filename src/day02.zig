@@ -10,8 +10,42 @@ const gpa = util.gpa;
 
 const data = @embedFile("data/day02.txt");
 
+pub fn dist(them:u8, ours:u8) i8 {
+    const ti = @intCast(i8, them);
+    const oi = @intCast(i8, ours);
+    const d = @mod(ti - oi, 3);
+
+    return @mod(2 * d, 3) - d;
+}
+
 pub fn main() !void {
-    
+    var lines = tokenize(u8, data, "\n");
+    var score : u32 = 0;
+
+    while (lines.next()) |line| {
+        const them = line[0] - 'A';
+        const ours = line[2] - 'X';
+
+
+        const res = dist(them, ours);
+
+        const tmpScore = @intCast(u8,(1-res) * 3) + ours + 1;
+        score += tmpScore;
+
+        print("{d}, {d} -> {d} => {d}\n", .{them, ours, res, tmpScore});
+
+    }
+
+    print("First awnser : {d}", .{score});
+}
+
+test {
+    try std.testing.expectEqual(dist(0,0), 0);
+    try std.testing.expectEqual(dist(1,0), 1);
+    try std.testing.expectEqual(dist(0,1), -1);
+
+    try std.testing.expectEqual(dist(2,2), 0);
+    try std.testing.expectEqual(dist(2,0), 1);
 }
 
 // Useful stdlib functions
